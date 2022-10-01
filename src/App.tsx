@@ -18,8 +18,8 @@ export default function App() : JSX.Element {
     }
     getWord();
   }, []);
-  
+  console.log(solution);
   return React.createElement('div',  {className : "App", key: solution}, 
-          solution, React.createElement(Grid, { solution: solution }));
+          React.createElement(Grid, { solution: solution }));
   
 }

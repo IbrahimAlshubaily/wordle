@@ -5,7 +5,8 @@ export function getGridRow(rowStartIdx : number, guess: string[], solution : str
     for (let i = 0; i < 5; i++) {
       squares[i] = renderSquare(rowStartIdx + i, guess[i], solution);
     }
-    return React.createElement('div',  {className: "board-row", key: rowStartIdx}, squares);
+    return <div className='row' key = {rowStartIdx}>{squares}</div>
+    //return React.createElement('div',  {className: "gridRow", key: rowStartIdx}, squares);
 }
 
 function renderSquare(squareIdx : number, currChar: string, solution : string) : JSX.Element {

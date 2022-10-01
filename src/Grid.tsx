@@ -1,5 +1,4 @@
 import React from 'react';
-import "./css/Grid.css"
 import { getGridRow } from './GridRow';
 
 interface GridProps {
