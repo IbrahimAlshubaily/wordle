@@ -3,63 +3,67 @@ import Square from "./Square"
 import "./css/Grid.css"
 
 interface GridState {
-  correctWord : string,
+  word : string,
   squares : (string | undefined) [],
   nextInd : number 
 }
 
-export default class Grid extends React.Component<{}, GridState> {
+interface GridProps {
+  word : String;
+}
+export default class Grid extends React.Component<GridProps, GridState> {
 
-  constructor(props : {}) {
+  constructor(props : GridProps) {
     super(props);
+    console.log("grid", props.word);
     this.state = { 
-      correctWord : "hoyah",
-      squares : Array(9).fill(undefined),
+      word : props.word.toLowerCase(),
+      squares : Array(25).fill(undefined),
       nextInd : 0,
     } as GridState;
-
+    console.log("X");
+    console.log(this.state.word);
     document.addEventListener('keydown', e => this.updateState(e.key), false);   
   }
 
   isLetter(str : string) : boolean {
-    return str.length === 1 && str.toLowerCase() != str.toUpperCase();
+    return str.length === 1 && str.toLowerCase() !== str.toUpperCase();
   }
 
   updateState(key : string) : void {
-    let nextInd : number = this.state.nextInd;
+    
+    const nextInd : number = this.state.nextInd;
     const squares : (string | undefined) [] =  this.state.squares.slice();
 
     if (this.isLetter(key) && nextInd < 25) {
-        squares[nextInd++] = key;
-    } else if (key === "Backspace" && nextInd > 0) {
-      squares[--nextInd] = undefined;
-    }
-
-    this.setState({
-      squares : squares,
-      nextInd : nextInd,
-    });
-
+      squares[nextInd] = key;
+      
+      this.setState({
+        squares : squares,
+        nextInd : nextInd + 1,
+      });
+    } 
   }
 
   renderSquare(squareIdx : number) : JSX.Element {
 
     const currChar = this.state.squares[squareIdx];
-    const correctWord = this.state.correctWord;
+    const solution = this.state.word;
+    console.log(solution);
 
     let color = "";
     if (currChar) {
 
-      if (currChar === correctWord[squareIdx%5]) {
+      if (currChar === solution[squareIdx%5]) {
           color = 'green';
-      } else if (correctWord.includes(currChar)) {
+      } else if (solution.includes(currChar)) {
           color = "blue";
       } else {
           color = "gray";
       }
 
     } 
-    return React.createElement(Square, { value: currChar, color: color});
+    return React.createElement(Square, {key: squareIdx, value: currChar, color: color});
 }
   
   getGridRow(rowStartIdx : number) : JSX.Element {
@@ -67,7 +71,7 @@ export default class Grid extends React.Component<{}, GridState> {
     for (let i = 0; i < 5; i++) {
       squares[i] = this.renderSquare(rowStartIdx + i);
     }
-    return React.createElement('div',  {className: "board-row"}, squares);
+    return React.createElement('div',  {className: "board-row", key: rowStartIdx}, squares);
   }
 
   render() : JSX.Element {
@@ -77,4 +81,6 @@ export default class Grid extends React.Component<{}, GridState> {
     }
     return React.createElement('div',  {className : "grid"}, divChildren);
   }
+
+
 }
