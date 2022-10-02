@@ -20,7 +20,7 @@ export default class Grid extends React.Component<GridProps, GridState> {
       squares : Array(25).fill(''),
       nextInd : 0,
     } as GridState;
-    document.addEventListener('keydown', e => this.updateState(e.key), false);   
+    document.addEventListener('keydown', e => this.updateState(e.key), false);
   }
 
   isLetter(str : string) : boolean {
