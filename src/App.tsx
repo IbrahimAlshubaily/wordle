@@ -19,7 +19,9 @@ export default function App() : JSX.Element {
     getWord();
   }, []);
   console.log(solution);
-  return React.createElement('div',  {className : "App", key: solution}, 
-          React.createElement(Grid, { solution: solution }));
+  return  <div className="App" key={solution}>
+            <Grid solution={solution}/>
+          </div>
+
   
 }
