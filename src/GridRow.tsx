@@ -1,22 +1,16 @@
-import React from 'react';
-
-export function getGridRow(rowStartIdx : number, guess: string[], solution : string) : JSX.Element {
-    const squares : JSX.Element[] = Array(5);
-    for (let i = 0; i < 5; i++) {
-      squares[i] = renderSquare(rowStartIdx + i, guess[i], solution);
-    }
-    return <div className='row' key = {rowStartIdx}>{squares}</div>
+import Square from "./Square"
+type GridRowProps = {
+    rowIdx: number
+    currGuess : string[],
+    solution : string,
 }
 
-function renderSquare(squareIdx : number, currChar: string, solution : string) : JSX.Element {
-    let color = "";
-    if (currChar) {
-        color = "gray";
-      if (currChar === solution[squareIdx%5]) {
-          color = 'green';
-        } else if (solution.includes(currChar)) {
-            color = "blue";
-        }
+export default function GridRow(props: GridRowProps): JSX.Element {
+    const currRow : JSX.Element[] = Array(5);
+    for (let j = 0; j < 5; j++){
+        const currIdx = (props.rowIdx * 5) + j;
+        currRow[j] = <Square squareIdx={currIdx} currChar={props.currGuess[j]} solution={props.solution}/>
     }
-    return <div className="square" key={squareIdx} style={{backgroundColor: color}}> {currChar}</div>
+    return <div className = 'row'>{currRow}</div>;
 }
+

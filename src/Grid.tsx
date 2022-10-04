@@ -1,53 +1,48 @@
-import React from 'react';
-import { getGridRow } from './GridRow';
+import React, { useEffect, useState } from 'react';
+import GridRow from "./GridRow"
 
 interface GridProps {
-  solution : String;
+  solution : string;
 }
 
 interface GridState {
   word : string,
   squares : string [],
-  nextInd : number 
+  nextIdx : number 
 }
-
 export default class Grid extends React.Component<GridProps, GridState> {
 
-  constructor(props : GridProps) {
+  constructor(props: GridProps) {
     super(props);
-    this.state = { 
-      word : props.solution.toLowerCase(),
+    this.state = {
+      word: props.solution.toLowerCase(),
       squares : Array(25).fill(''),
-      nextInd : 0,
-    } as GridState;
-    document.addEventListener('keydown', e => this.updateState(e.key), false);
+      nextIdx: 0,
+    }as GridState;
   }
 
-  isLetter(str : string) : boolean {
-    return str.length === 1 && str.toLowerCase() !== str.toUpperCase();
+  componentDidMount(): void {
+    window.addEventListener('keydown', e => this.handleKeyDown(e.key));
+  }
+  componentWillUnmount(): void {
+    window.removeEventListener('keydown', e => this.handleKeyDown(e.key));
   }
 
-  updateState(key : string) : void {
-    
-    const nextInd : number = this.state.nextInd;
-    const squares : string[] =  this.state.squares.slice();
-
-    if (this.isLetter(key) && nextInd < 25) {
-      squares[nextInd] = key;
-      
-      this.setState({
-        squares : squares,
-        nextInd : nextInd + 1,
-      });
-    } 
-  }
-
-  render() : JSX.Element {
-    const divChildren : JSX.Element[] = Array(5);
-    for (let i = 0; i < 5; i++) {
-      divChildren[i] = getGridRow(i * 5, this.state.squares.slice(i * 5, (i+1) * 5), this.state.word);
+  handleKeyDown(eventKey: string) {
+    const isLetter = (str: string): boolean =>  str.length === 1 && str.toLowerCase() !== str.toUpperCase();
+    const {squares, nextIdx} = this.state;
+    if (isLetter(eventKey) && nextIdx < 25) {
+      const updatedSquares = squares.slice();
+      updatedSquares[nextIdx] = eventKey.toLowerCase();
+      this.setState({...this.state, squares: updatedSquares, nextIdx: nextIdx+1});
     }
-    return React.createElement('div',  {className : "grid"}, divChildren);
   }
-
+  
+  render() {
+    const grid: JSX.Element[] = Array(5);
+    for (let i = 0; i < 5; i++) {
+      grid[i] = <GridRow rowIdx={i} currGuess={this.state.squares.slice(i*5, i*5 + 5)} solution={this.state.word} />
+    }
+    return <div className='grid'>{grid}</div>;
+  }
 }

@@ -1,26 +1,23 @@
 
 import React, { useEffect, useState } from 'react';
+import { json } from 'stream/consumers';
 import './css/App.css';
 import Grid from "./Grid"
 
 const API_URL = "https://api.frontendexpert.io/api/fe/wordle-words";
 
 export default function App() : JSX.Element {
-  
-  const [solution, setSolution] = useState('');
-  
+  const [word, setWord] = useState('');
   useEffect(() => {
-    const getWord = async() => {
-      const reponse =  await fetch(API_URL);
-      const words = await reponse.json();
-      const wordIdx = Math.floor(Math.random() * words.length);
-      setSolution(words[wordIdx]);
-    }
-    getWord();
+  
+    fetch(API_URL).
+    then((res) => res.json()).
+    then(words => setWord(words[Math.floor(Math.random() * words.length)]));
+  
   }, []);
-  console.log(solution);
-  return  <div className="App" key={solution}>
-            <Grid solution={solution}/>
+  console.log(word);
+  return  <div className="App" key={word}>
+            <Grid solution={word}/>
           </div>
 
   
