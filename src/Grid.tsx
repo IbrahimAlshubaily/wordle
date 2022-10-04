@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import GridRow from "./GridRow"
 
 interface GridProps {
@@ -32,9 +32,8 @@ export default class Grid extends React.Component<GridProps, GridState> {
     const isLetter = (str: string): boolean =>  str.length === 1 && str.toLowerCase() !== str.toUpperCase();
     const {squares, nextIdx} = this.state;
     if (isLetter(eventKey) && nextIdx < 25) {
-      const updatedSquares = squares.slice();
-      updatedSquares[nextIdx] = eventKey.toLowerCase();
-      this.setState({...this.state, squares: updatedSquares, nextIdx: nextIdx+1});
+      squares[nextIdx] = eventKey.toLowerCase();
+      this.setState({...this.state, squares: squares, nextIdx: nextIdx+1});
     }
   }
   
